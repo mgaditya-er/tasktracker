@@ -10,3 +10,4 @@ pytest
 pytest-cov
 alembic
 pytest
+httpx
