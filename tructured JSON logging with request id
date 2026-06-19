@@ -1,0 +1,18 @@
+  dev[m
+  feature/alembic-migrations[m
+  feature/env-config[m
+  feature/health-ready-probes[m
+* [32mfeature/json-logging[m
+  feature/project-setup[m
+  feature/user-task-api[m
+  main[m
+  stg[m
+  [31mremotes/origin/HEAD[m -> origin/main
+  [31mremotes/origin/dev[m
+  [31mremotes/origin/feature/alembic-migrations[m
+  [31mremotes/origin/feature/env-config[m
+  [31mremotes/origin/feature/health-ready-probes[m
+  [31mremotes/origin/feature/project-setup[m
+  [31mremotes/origin/feature/user-task-api[m
+  [31mremotes/origin/main[m
+  [31mremotes/origin/stg[m
