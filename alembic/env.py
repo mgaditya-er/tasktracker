@@ -9,7 +9,13 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
+from alembic import context
+from dotenv import load_dotenv
 import os
+
+config = context.config
+
+load_dotenv()
 
 database_url = os.getenv("DATABASE_URL")
 
@@ -31,6 +37,8 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+# target_metadata = None 
+# replacing with the actual metadata from models
 from app.db.base import Base
 from app.models.user import User
 from app.models.task import Task
