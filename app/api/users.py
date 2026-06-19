@@ -5,22 +5,21 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate
+from app.schemas.user import UserCreate, UserResponse
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/users",
-    tags=["Users"]
-)
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(
     request: Request,
     payload: UserCreate,
     db: Session = Depends(get_db)
 ):
+
+    request_id = getattr(request.state, "request_id", "N/A")
 
     existing_user = db.query(User).filter(
         User.email == payload.email
@@ -29,9 +28,7 @@ def create_user(
     if existing_user:
         logger.warning(
             "user creation failed - email already exists",
-            extra={
-                "request_id": request.state.request_id
-            }
+            extra={"request_id": request_id}
         )
 
         raise HTTPException(
@@ -50,50 +47,46 @@ def create_user(
 
     logger.info(
         f"user created id={user.id}",
-        extra={
-            "request_id": request.state.request_id
-        }
+        extra={"request_id": request_id}
     )
 
-    return user
+    return UserResponse.model_validate(user)
 
 
-@router.get("")
+@router.get("", response_model=list[UserResponse])
 def get_users(
     request: Request,
     db: Session = Depends(get_db)
 ):
 
+    request_id = getattr(request.state, "request_id", "N/A")
+
     users = db.query(User).all()
 
     logger.info(
         "users fetched",
-        extra={
-            "request_id": request.state.request_id
-        }
+        extra={"request_id": request_id}
     )
 
-    return users
+    return users 
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}", response_model=UserResponse)
 def get_user(
     user_id: int,
     request: Request,
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
+    request_id = getattr(request.state, "request_id", "N/A")
+
+    user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
 
         logger.warning(
             f"user not found id={user_id}",
-            extra={
-                "request_id": request.state.request_id
-            }
+            extra={"request_id": request_id}
         )
 
         raise HTTPException(
@@ -103,9 +96,7 @@ def get_user(
 
     logger.info(
         f"user fetched id={user_id}",
-        extra={
-            "request_id": request.state.request_id
-        }
+        extra={"request_id": request_id}
     )
 
-    return user
+    return UserResponse.model_validate(user)
