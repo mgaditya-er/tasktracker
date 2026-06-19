@@ -4,7 +4,9 @@ from datetime import datetime
 
 
 class JsonFormatter(logging.Formatter):
+
     def format(self, record):
+
         log_record = {
             "timestamp": datetime.utcnow().isoformat(),
             "level": record.levelname,
@@ -19,16 +21,13 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(log_record)
 
 
-def setup_logger():
-    logger = logging.getLogger()
-
-    logger.setLevel(logging.INFO)
-
-    logger.handlers.clear()
+def setup_logging():
 
     handler = logging.StreamHandler()
     handler.setFormatter(JsonFormatter())
 
-    logger.addHandler(handler)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
 
-    return logger
+    root_logger.handlers.clear()
+    root_logger.addHandler(handler)
