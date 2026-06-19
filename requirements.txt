@@ -9,3 +9,4 @@ email-validator
 pytest
 pytest-cov
 alembic
+pytest
