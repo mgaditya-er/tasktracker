@@ -1,15 +1,21 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+# app/core/config.py
 
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import ValidationError
 
 class Settings(BaseSettings):
     DATABASE_URL: str
-    LOG_LEVEL: str = "INFO"
-    APP_PORT: int = 8000
+    LOG_LEVEL: str
+    APP_PORT: int
 
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore"
     )
 
-
-settings = Settings()
+try:
+    settings = Settings()
+except ValidationError as e:
+    raise RuntimeError(
+        f"Missing required environment variables: {e}"
+    )
