@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: tasktracker-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: tasktracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    container_name: tasktracker-api
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/tasktracker
+      APP_PORT: 8000
+      LOG_LEVEL: INFO
+    ports:
+      - "8000:8000"
